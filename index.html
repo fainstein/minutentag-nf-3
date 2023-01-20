@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cryptocurrencies</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <article>
+      <header>
+        <nav>
+          <ul>
+            <li><a href="#" id="home" class="secondary">Home</a></li>
+          </ul>
+          <ul>
+            <li><strong>Cryptocurrencies</strong></li>
+          </ul>
+          <ul>
+            <li></li>
+          </ul>
+        </nav>
+      </header>
+      <main>
+        <hgroup>
+          <h1>Get all the data</h1>
+          <h3>In just one place. Here.</h3>
+        </hgroup>
+        <figure class="table">
+          <table role="grid">
+            <thead>
+              <tr>
+                <th scope="col">Symbol</th>
+                <th scope="col">Base asset</th>
+                <th scope="col">Open price</th>
+                <th scope="col">Low</th>
+                <th scope="col">High</th>
+                <th scope="col">Last price</th>
+                <th scope="col">Volume</th>
+              </tr>
+            </thead>
+            <tbody><tr></tr></tbody>
+            <tfoot>
+              <tr>
+                <th scope="col">#</th>
+                <td scope="col">Total</td>
+                <td scope="col">Total</td>
+                <td scope="col">Total</td>
+                <td scope="col">Total</td>
+                <td scope="col">Total</td>
+                <td scope="col">Total</td>
+              </tr>
+            </tfoot>
+          </table>
+        </figure>
+        <article id="loadingDiv" aria-busy="true"></article>
+      </main>
+    </article>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="./index.js"></script>
+  </body>
+</html>

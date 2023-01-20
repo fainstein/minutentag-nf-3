@@ -1,0 +1,39 @@
+In this challenge, we want to show a list with 10 crypto currency for page, in each row,
+
+should be displayed: symbol, base asset, open price, low price, high price, last price and volume.
+
+ 
+
+Filters (Must be applied in all the pages):
+
+- search bar: depending on base asset.
+
+- select: low to high, high to low, no filter (depending on open price).
+
+- select: alphabetic order (A-Z, Z-A, no filter) (depending on base asset).
+
+ 
+
+Requirements:
+
+- The request must be done with Ajax.
+
+- Each page must be clickable and load the correct cryptos.
+
+ 
+
+Initial state (Must show all the results and pages):
+
+- Search bar: Empty
+
+- Select: No filter
+
+ 
+
+ 
+
+API to use: https://api.wazirx.com/sapi/v1/tickers/24hr
+
+ 
+
+please be creative :)
