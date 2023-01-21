@@ -60,7 +60,7 @@ $("#search").on("input", (event) => {
     return;
   }
   renderedList = completeList.filter((token) =>
-    token.baseAsset.includes(event.target.value)
+    token.baseAsset.includes(event.target.value.toLowerCase())
   );
   if (renderedList.length <= 10) {
     $("#next-nav").addClass("disabled-link");
