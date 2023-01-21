@@ -36,6 +36,32 @@
           <h3>In just one place. Here.</h3>
         </hgroup>
         <div id="table-container">
+          <div class="grid">
+            <input
+              type="search"
+              id="search"
+              name="search"
+              placeholder="Search"
+            />
+            <div class="grid sort-container">
+              <div>
+                <label for="openPrice">Open price</label>
+                <select id="openPrice">
+                  <option value="none" selected>Sort...</option>
+                  <option value="asc">Low to High</option>
+                  <option value="desc">High to Low</option>
+                </select>
+              </div>
+              <div>
+                <label for="baseAsset">Base asset</label>
+                <select id="baseAsset">
+                  <option value="none" selected>Sort...</option>
+                  <option value="asc">A to Z</option>
+                  <option value="desc">Z to A</option>
+                </select>
+              </div>
+            </div>
+          </div>
           <figure class="table">
             <table role="grid">
               <thead>

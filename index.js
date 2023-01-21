@@ -1,4 +1,5 @@
-let completeListToRender = [];
+let completeList = [];
+let renderedList = [];
 let currentPage = 0; // 0 indexed
 
 $(document).ready(() => {
@@ -10,13 +11,14 @@ const fetchList = () => {
   $.ajax({
     url: "https://api.wazirx.com/sapi/v1/tickers/24hr",
   }).done((response) => {
-    completeListToRender = response;
+    completeList = response;
+    renderedList = completeList;
     hideLoading();
     populateTable();
   });
 };
 
-const populateTable = () => {
+const populateTable = (list = renderedList) => {
   let html = "";
   for (let {
     symbol,
@@ -26,7 +28,7 @@ const populateTable = () => {
     highPrice,
     lastPrice,
     volume,
-  } of completeListToRender.slice(10 * currentPage, 10 * (currentPage + 1))) {
+  } of list.slice(10 * currentPage, 10 * (currentPage + 1))) {
     html +=
       "<tr><th scope='row'>" +
       symbol.toUpperCase() +
@@ -47,6 +49,55 @@ const populateTable = () => {
   $("tbody").replaceWith(`<tbody>${html}</tbody>`);
 };
 
+$("#search").on("input", (event) => {
+  currentPage = 0;
+  $("#openPrice").val("none");
+  $("#baseAsset").val("none");
+  $("#prev-nav").addClass("disabled-link");
+  if (event.target.value === "") {
+    renderedList = completeList;
+    populateTable();
+    return;
+  }
+  renderedList = completeList.filter((token) =>
+    token.baseAsset.includes(event.target.value)
+  );
+  if (renderedList.length <= 10) {
+    $("#next-nav").addClass("disabled-link");
+  } else {
+    $("#next-nav").removeClass("disabled-link");
+  }
+  populateTable();
+});
+
+$("#openPrice").change((event) => {
+  currentPage = 0;
+  $("#baseAsset").val("none");
+  $("#search").val("");
+  if (event.target.value === "asc") {
+    renderedList = completeList.sort((a, b) => a.openPrice - b.openPrice);
+  } else if (event.target.value === "desc") {
+    renderedList = completeList.sort((a, b) => b.openPrice - a.openPrice);
+  }
+  populateTable();
+});
+
+$("#baseAsset").change((event) => {
+  currentPage = 0;
+  $("#openPrice").val("none");
+  $("#search").val("");
+  if (event.target.value === "asc") {
+    renderedList = completeList.sort((a, b) =>
+      a.baseAsset.localeCompare(b.baseAsset)
+    );
+  } else if (event.target.value === "desc") {
+    renderedList = completeList.sort((a, b) =>
+      b.baseAsset.localeCompare(a.baseAsset)
+    );
+  }
+  populateTable();
+});
+
 $("#prev-nav").click(() => {
   if (currentPage === 1) {
     $("#prev-nav").addClass("disabled-link");
@@ -57,7 +108,8 @@ $("#prev-nav").click(() => {
 });
 
 $("#next-nav").click(() => {
-  if (currentPage === Math.ceil(completeListToRender.length / 10) - 2) {
+  if (currentPage === Math.ceil(renderedList.length / 10) - 2) {
+    console.log("HEY!");
     $("#next-nav").addClass("disabled-link");
   }
   $("#prev-nav").removeClass("disabled-link");

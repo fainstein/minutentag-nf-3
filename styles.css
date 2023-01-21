@@ -6,13 +6,22 @@ a:is([aria-current], :hover, :active, :focus) {
   text-decoration: none;
   cursor: pointer;
 }
+
+hgroup {
+    margin: 0;
+}
+
+.sort-container {
+  grid-template-columns: repeat(auto-fit, minmax(0%, 1fr));
+}
+
+#search {
+    align-self: end;
+}
+
 .navigation-control {
   display: flex;
   justify-content: center;
-}
-
-.middle-space-nav {
-    width: 50px;
 }
 
 .navigation-control a {
@@ -23,6 +32,10 @@ a:is([aria-current], :hover, :active, :focus) {
 
 .navigation-control p {
   margin: 0;
+}
+
+.middle-space-nav {
+  width: 50px;
 }
 
 .disabled-link,
