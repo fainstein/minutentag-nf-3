@@ -1,56 +1,76 @@
+let completeListToRender = [];
+let currentPage = 0; // 0 indexed
+
 $(document).ready(() => {
   showLoading();
-  fetchRequestedData();
+  fetchList();
 });
 
-const fetchRequestedData = (
-  isAlphabetic = null,
-  isLowToHigh = null,
-  searchQuery = null
-) => {
+const fetchList = () => {
   $.ajax({
     url: "https://api.wazirx.com/sapi/v1/tickers/24hr",
   }).done((response) => {
-    const data = response.slice(0, 10);
+    completeListToRender = response;
     hideLoading();
-    console.log(data);
-    var html = "";
-    for (let {
-      symbol,
-      baseAsset,
-      openPrice,
-      lowPrice,
-      highPrice,
-      lastPrice,
-      volume,
-    } of data) {
-      html =
-        "<tr><th scope='row'>" +
-        symbol +
-        "</th><td>" +
-        baseAsset +
-        "</td><td>" +
-        openPrice +
-        "</td><td>" +
-        lowPrice +
-        "</td><td>" +
-        highPrice +
-        "</td><td>" +
-        lastPrice +
-        "</td><td>" +
-        volume +
-        "</td></tr>";
-      $("tbody tr").first().after(html);
-    }
+    populateTable();
   });
 };
 
+const populateTable = () => {
+  let html = "";
+  for (let {
+    symbol,
+    baseAsset,
+    openPrice,
+    lowPrice,
+    highPrice,
+    lastPrice,
+    volume,
+  } of completeListToRender.slice(10 * currentPage, 10 * (currentPage + 1))) {
+    html +=
+      "<tr><th scope='row'>" +
+      symbol.toUpperCase() +
+      "</th><td>" +
+      baseAsset.toUpperCase() +
+      "</td><td>" +
+      openPrice +
+      "</td><td>" +
+      lowPrice +
+      "</td><td>" +
+      highPrice +
+      "</td><td>" +
+      lastPrice +
+      "</td><td>" +
+      volume +
+      "</td></tr>";
+  }
+  $("tbody").replaceWith(`<tbody>${html}</tbody>`);
+};
+
+$("#prev-nav").click(() => {
+  if (currentPage === 1) {
+    $("#prev-nav").addClass("disabled-link");
+  }
+  $("#next-nav").removeClass("disabled-link");
+  currentPage--;
+  populateTable();
+});
+
+$("#next-nav").click(() => {
+  if (currentPage === Math.ceil(completeListToRender.length / 10) - 2) {
+    $("#next-nav").addClass("disabled-link");
+  }
+  $("#prev-nav").removeClass("disabled-link");
+  currentPage++;
+  populateTable();
+});
+
 const showLoading = () => {
-  $("table").hide();
-  $("#loadingDiv").show();
+  $("#table-container").hide();
+  $("#loading-div").show();
 };
 
 const hideLoading = () => {
-  $("#loadingDiv").hide();
-  $("table").show();
+  $("#loading-div").hide();
+  $("#table-container").show();
 };

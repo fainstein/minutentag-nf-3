@@ -9,6 +9,10 @@
       rel="stylesheet"
       href="https://unpkg.com/@picocss/pico@latest/css/pico.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -31,34 +35,36 @@
           <h1>Get all the data</h1>
           <h3>In just one place. Here.</h3>
         </hgroup>
-        <figure class="table">
-          <table role="grid">
-            <thead>
-              <tr>
-                <th scope="col">Symbol</th>
-                <th scope="col">Base asset</th>
-                <th scope="col">Open price</th>
-                <th scope="col">Low</th>
-                <th scope="col">High</th>
-                <th scope="col">Last price</th>
-                <th scope="col">Volume</th>
-              </tr>
-            </thead>
-            <tbody><tr></tr></tbody>
-            <tfoot>
-              <tr>
-                <th scope="col">#</th>
-                <td scope="col">Total</td>
-                <td scope="col">Total</td>
-                <td scope="col">Total</td>
-                <td scope="col">Total</td>
-                <td scope="col">Total</td>
-                <td scope="col">Total</td>
-              </tr>
-            </tfoot>
-          </table>
-        </figure>
-        <article id="loadingDiv" aria-busy="true"></article>
+        <div id="table-container">
+          <figure class="table">
+            <table role="grid">
+              <thead>
+                <tr>
+                  <th scope="col">Symbol</th>
+                  <th scope="col">Base asset</th>
+                  <th scope="col">Open price</th>
+                  <th scope="col">Low</th>
+                  <th scope="col">High</th>
+                  <th scope="col">Last price</th>
+                  <th scope="col">Volume</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </figure>
+          <div class="navigation-control">
+            <a id="prev-nav" class="disabled-link">
+              <span class="material-symbols-outlined"> arrow_back_ios </span>
+              <p>Prev</p>
+            </a>
+            <span class="middle-space-nav"></span>
+            <a id="next-nav">
+              <p>Next</p>
+              <span class="material-symbols-outlined"> arrow_forward_ios </span>
+            </a>
+          </div>
+        </div>
+        <article id="loading-div" aria-busy="true"></article>
       </main>
     </article>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>

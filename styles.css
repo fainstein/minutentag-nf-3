@@ -1,7 +1,32 @@
-:root {
-  --primary: #8e24aa;
+article {
+  margin: 0;
 }
 
-article {
-    margin: 0;
+a:is([aria-current], :hover, :active, :focus) {
+  text-decoration: none;
+  cursor: pointer;
+}
+.navigation-control {
+  display: flex;
+  justify-content: center;
+}
+
+.middle-space-nav {
+    width: 50px;
+}
+
+.navigation-control a {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.navigation-control p {
+  margin: 0;
+}
+
+.disabled-link,
+.disabled-link p {
+  pointer-events: none;
+  color: #757575;
 }
