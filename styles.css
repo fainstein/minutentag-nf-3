@@ -19,6 +19,10 @@ hgroup {
     align-self: end;
 }
 
+.error-message {
+  text-align: center;
+}
+
 .navigation-control {
   display: flex;
   justify-content: center;

@@ -1,5 +1,5 @@
-let completeList = [];
-let renderedList = [];
+let completeList = []; // Raw list from API
+let renderedList = []; // Mutating array, related to UI
 let currentPage = 0; // 0 indexed
 
 $(document).ready(() => {
@@ -10,15 +10,26 @@ $(document).ready(() => {
 const fetchList = () => {
   $.ajax({
     url: "https://api.wazirx.com/sapi/v1/tickers/24hr",
-  }).done((response) => {
-    completeList = response;
-    renderedList = completeList;
-    hideLoading();
-    populateTable();
+    error: () => {
+      hideLoading();
+      $("#table-container").replaceWith(
+        `<p class="error-message">No results available. Please try again</p>`
+      );
+    },
+    success: (response) => {
+      completeList = response;
+      renderedList = [...completeList];
+      hideLoading();
+      populateTable();
+    },
   });
 };
 
-const populateTable = (list = renderedList) => {
+/**
+ * Fills the table in the UI with requested data and enables/disables pagination
+ */
+const populateTable = () => {
+  // Fill table rows with array data
   let html = "";
   for (let {
     symbol,
@@ -28,7 +39,7 @@ const populateTable = (list = renderedList) => {
     highPrice,
     lastPrice,
     volume,
-  } of list.slice(10 * currentPage, 10 * (currentPage + 1))) {
+  } of renderedList.slice(10 * currentPage, 10 * (currentPage + 1))) {
     html +=
       "<tr><th scope='row'>" +
       symbol.toUpperCase() +
@@ -47,73 +58,81 @@ const populateTable = (list = renderedList) => {
       "</td></tr>";
   }
   $("tbody").replaceWith(`<tbody>${html}</tbody>`);
-};
 
-$("#search").on("input", (event) => {
-  currentPage = 0;
-  $("#openPrice").val("none");
-  $("#baseAsset").val("none");
-  $("#prev-nav").addClass("disabled-link");
-  if (event.target.value === "") {
-    renderedList = completeList;
-    populateTable();
-    return;
-  }
-  renderedList = completeList.filter((token) =>
-    token.baseAsset.includes(event.target.value.toLowerCase())
-  );
+  // Enable/Disable next button based on total pagination
   if (renderedList.length <= 10) {
     $("#next-nav").addClass("disabled-link");
   } else {
     $("#next-nav").removeClass("disabled-link");
   }
-  populateTable();
-});
 
-$("#openPrice").change((event) => {
-  currentPage = 0;
-  $("#baseAsset").val("none");
-  $("#search").val("");
-  if (event.target.value === "asc") {
-    renderedList = completeList.sort((a, b) => a.openPrice - b.openPrice);
-  } else if (event.target.value === "desc") {
-    renderedList = completeList.sort((a, b) => b.openPrice - a.openPrice);
-  }
-  populateTable();
-});
-
-$("#baseAsset").change((event) => {
-  currentPage = 0;
-  $("#openPrice").val("none");
-  $("#search").val("");
-  if (event.target.value === "asc") {
-    renderedList = completeList.sort((a, b) =>
-      a.baseAsset.localeCompare(b.baseAsset)
-    );
-  } else if (event.target.value === "desc") {
-    renderedList = completeList.sort((a, b) =>
-      b.baseAsset.localeCompare(a.baseAsset)
-    );
-  }
-  populateTable();
-});
-
-$("#prev-nav").click(() => {
-  if (currentPage === 1) {
+  // Enable/Disable Pagination buttons based on current page
+  if (currentPage === Math.ceil(renderedList.length / 10) - 1) {
+    $("#next-nav").addClass("disabled-link");
+  } else if (currentPage === 0) {
     $("#prev-nav").addClass("disabled-link");
   }
-  $("#next-nav").removeClass("disabled-link");
-  currentPage--;
+};
+
+/**
+ * Change Event Handler for Search Text input
+ */
+$("#search").on("input", (event) => {
+  currentPage = 0;
+  $("#openPrice").val("none");
+  $("#baseAsset").val("none");
+  $("#prev-nav").addClass("disabled-link");
+  renderedList = completeList.filter((token) =>
+    token.baseAsset.includes(event.target.value.toLowerCase())
+  );
   populateTable();
 });
 
+/**
+ * Change Event Handler for Open Price Select Input
+ */
+$("#openPrice").change((event) => {
+  currentPage = 0;
+  renderedList = renderedList.sort((a, b) => {
+    if (event.target.value === "asc") {
+      return a.openPrice - b.openPrice; // low to high
+    } else if (event.target.value === "desc") {
+      return b.openPrice - a.openPrice; // high to low
+    }
+  });
+  populateTable();
+});
+
+/**
+ * Change Event Handler for Base Asset Select Input
+ */
+$("#baseAsset").change((event) => {
+  currentPage = 0;
+  renderedList = renderedList.sort((a, b) => {
+    if (event.target.value === "asc") {
+      return a.baseAsset.localeCompare(b.baseAsset); // A to Z
+    } else if (event.target.value === "desc") {
+      return b.baseAsset.localeCompare(a.baseAsset); // Z to A
+    }
+  });
+  populateTable();
+});
+
+/**
+ * Click Event Handler "Prev" button
+ */
+$("#prev-nav").click(() => {
+  currentPage--;
+  $("#next-nav").removeClass("disabled-link");
+  populateTable();
+});
+
+/**
+ * Click Event Handler "Next" button
+ */
 $("#next-nav").click(() => {
-  if (currentPage === Math.ceil(renderedList.length / 10) - 2) {
-    console.log("HEY!");
-    $("#next-nav").addClass("disabled-link");
-  }
-  $("#prev-nav").removeClass("disabled-link");
   currentPage++;
+  $("#prev-nav").removeClass("disabled-link");
   populateTable();
 });
 
